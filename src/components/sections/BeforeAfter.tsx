@@ -5,6 +5,18 @@ import { SectionHeading } from '../ui/section-heading'
 import { ShimmerButton } from '../magicui/shimmer-button'
 import { images } from '../../data/content'
 import { whatsappLink } from '../../lib/links'
+import { unsplashSrcSet } from '../../lib/utils'
+
+const imgProps = {
+  src: images.beforeAfter,
+  srcSet: unsplashSrcSet(images.beforeAfter, [640, 800, 1024, 1400]),
+  sizes: '(min-width: 1056px) 1024px, calc(100vw - 2rem)',
+  width: 1400,
+  height: 1048,
+  draggable: false,
+  loading: 'lazy' as const,
+  decoding: 'async' as const,
+}
 
 // Visuel d'illustration : remplacer par de vraies photos avant/après du client.
 export function BeforeAfter() {
@@ -56,17 +68,15 @@ export function BeforeAfter() {
           className="relative aspect-[4/3] cursor-ew-resize touch-pan-y select-none overflow-hidden rounded-3xl border border-white/10 sm:aspect-[16/9]"
         >
           {/* Après */}
-          <img src={images.beforeAfter} alt="Voiture après nettoyage" className="absolute inset-0 h-full w-full object-cover" draggable={false} loading="lazy" />
+          <img {...imgProps} alt="Voiture après nettoyage" className="absolute inset-0 h-full w-full object-cover" />
           <span className="absolute right-4 top-4 rounded-full bg-brand px-3 py-1 font-display text-xs font-bold uppercase italic">Après</span>
 
           {/* Avant */}
           <m.div className="absolute inset-0" style={{ clipPath: clip }}>
             <img
-              src={images.beforeAfter}
+              {...imgProps}
               alt="Voiture avant nettoyage"
               className="absolute inset-0 h-full w-full object-cover [filter:sepia(0.55)_saturate(0.6)_brightness(0.62)_contrast(0.85)]"
-              draggable={false}
-              loading="lazy"
             />
             <div
               className="absolute inset-0 mix-blend-multiply"
