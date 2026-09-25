@@ -6,11 +6,12 @@ type Props = {
   className?: string
   reverse?: boolean
   pauseOnHover?: boolean
+  paused?: boolean
   repeat?: number
   duration?: string
 }
 
-export function Marquee({ children, className, reverse, pauseOnHover, repeat = 4, duration = '30s' }: Props) {
+export function Marquee({ children, className, reverse, pauseOnHover, paused, repeat = 4, duration = '30s' }: Props) {
   return (
     <div
       className={cn('group flex overflow-hidden [--gap:2.5rem] [gap:var(--gap)]', className)}
@@ -24,6 +25,7 @@ export function Marquee({ children, className, reverse, pauseOnHover, repeat = 4
             'flex shrink-0 animate-marquee items-center justify-around [gap:var(--gap)]',
             reverse && '[animation-direction:reverse]',
             pauseOnHover && 'group-hover:[animation-play-state:paused]',
+            paused && '[animation-play-state:paused]',
           )}
         >
           {children}

@@ -15,6 +15,11 @@ export function initSmoothScroll() {
 export function scrollToId(id: string) {
   const el = document.getElementById(id)
   if (!el) return
-  if (lenis) lenis.scrollTo(el, { offset: -72, duration: 0.8 })
-  else el.scrollIntoView({ behavior: 'smooth' })
+  // Lenis retranche déjà le scroll-padding-top du <html> (80px, sous la barre fixe) : pas d'offset en plus.
+  if (lenis) lenis.scrollTo(el, { duration: 0.8 })
+  else el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
 }
+
+// Menu mobile ouvert : on fige le défilement lissé.
+export const stopScroll = () => lenis?.stop()
+export const startScroll = () => lenis?.start()

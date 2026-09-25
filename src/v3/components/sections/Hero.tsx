@@ -1,83 +1,114 @@
-import { MapPin, Phone, Sparkles } from 'lucide-react'
-import { ShimmerButton } from '../magicui/shimmer-button'
+import { ArrowDown, MapPin, Phone } from 'lucide-react'
+import { CutButton } from '../ui/cut-button'
+import { Stitch } from '../ui/stitch'
 import { WordReveal } from '../magicui/word-reveal'
-import { contact, images } from '../../data/content'
+import { contact, formulas, images, travel, type FormulaId } from '../../data/content'
+import { fr } from '../../lib/fr'
 import { telLink } from '../../lib/links'
 import { scrollToId } from '../../lib/smooth-scroll'
+import { unsplashSrcSet } from '../../lib/utils'
 
 // Animations CSS (et non Motion) : visibles dès le premier rendu, sans attendre le JS de Motion.
-const fadeUp = (delay: number) => ({ style: { animationDelay: `${delay}s` } })
+const delay = (s: number) => ({ animationDelay: `${s}s` })
 
-const stats = [
-  { v: '60', pre: 'dès ', suf: ' €', label: 'la prestation' },
-  { v: '3', suf: '', label: 'formules au choix' },
-  { v: '10', suf: ' km', label: 'déplacement inclus' },
-  { v: '100', suf: ' %', label: 'à domicile' },
-]
-
-export function Hero() {
+export function Hero({ onPick }: { onPick: (id: FormulaId) => void }) {
   return (
-    <section id="top" className="relative flex min-h-[100svh] flex-col justify-center overflow-hidden pt-28">
-      {/* Fond statique : image + dégradés, aucun filtre ni animation */}
-      <div className="absolute inset-0">
-        <img src={images.hero} alt="" width={1600} height={1067} className="h-full w-full object-cover opacity-35" fetchPriority="high" decoding="async" />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/40 to-ink" />
-        <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_62%,rgba(225,6,0,0.28),transparent_70%)]" />
-      </div>
+    <section id="top" className="relative isolate overflow-x-clip bg-ink lg:min-h-[100svh]">
+      <span id="top-sentinel" aria-hidden className="pointer-events-none absolute top-0 left-0 h-16 w-px" />
+      {/* La seule lueur de la page : l'éclairage d'ambiance de l'habitacle, accroché au montant de la photo */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_70%_40%_at_50%_40%,rgb(225_6_0/0.22),transparent_70%)] lg:bg-[radial-gradient(ellipse_50%_45%_at_62%_70%,rgb(225_6_0/0.26),transparent_70%)]"
+      />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center px-4 text-center">
-        <div
-          {...fadeUp(0)}
-          className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/80 sm:text-sm"
-        >
-          <MapPin className="h-3.5 w-3.5 text-brand" />
-          Nettoyage auto à domicile · {contact.zone}
-        </div>
+      <div className="mx-auto max-w-[75rem] px-4 sm:px-8 lg:grid lg:min-h-[100svh] lg:grid-cols-12 lg:items-center lg:gap-x-6">
+        <div className="pt-24 sm:pt-28 lg:col-span-7 lg:pt-32 lg:pb-28 xl:col-span-8">
+          <WordReveal
+            delay={0.05}
+            text="L’intérieur de votre voiture, nettoyé là où elle est garée."
+            highlight={['intérieur']}
+            className="font-display text-[2.6rem] leading-[0.95] font-bold tracking-[-0.01em] italic uppercase sm:text-6xl lg:text-[clamp(3.4rem,5.4vw,5rem)]"
+          />
 
-        <WordReveal
-          delay={0.05}
-          text="Votre voiture comme neuve, sans bouger de chez vous."
-          highlight={['neuve']}
-          className="mt-6 max-w-5xl font-display text-[2.6rem] leading-[0.98] font-bold italic uppercase sm:text-6xl lg:text-[5.5rem]"
-        />
+          {/* Sans animation : c'est l'élément LCP mesuré sur mobile */}
+          <p className="mt-6 max-w-[46ch] text-base leading-[1.6] text-white/75 lg:text-lg">
+            {fr('Aspiration, shampouinage des sièges, plastiques, vitres, cuir : on vient avec tout le matériel, devant chez vous ou sur le parking du bureau.')}
+          </p>
 
-        {/* Sans animation : c'est l'élément LCP mesuré par Lighthouse sur mobile */}
-        <p className="mt-6 max-w-xl text-base text-white/70 sm:text-lg">
-          Aspiration, shampouinage, plastiques, vitres, cuir… On vient chez vous ou au travail avec tout le matériel pro.
-          Vous, vous ne faites rien.
-        </p>
+          <div id="hero-actions" style={delay(0.4)} className="mt-9 flex animate-fade-up flex-col gap-3 sm:flex-row">
+            <CutButton href={telLink} size="lg" aria-label={`Appeler le ${contact.phoneDisplay}`} icon={<Phone aria-hidden className="h-5 w-5" />} className="max-sm:w-full">
+              {contact.phoneDisplay}
+            </CutButton>
+            <CutButton
+              href="#tarif"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollToId('tarif')
+              }}
+              variant="outline"
+              size="lg"
+              className="max-sm:w-full"
+            >
+              Calculer mon prix
+              <ArrowDown aria-hidden className="h-5 w-5" />
+            </CutButton>
+          </div>
 
-        <div {...fadeUp(0.4)} className="animate-fade-up mt-9 flex flex-col items-center gap-3 sm:flex-row">
-          <ShimmerButton href={telLink} className="px-8 py-4 text-base">
-            <Phone className="h-5 w-5" /> {contact.phoneDisplay}
-          </ShimmerButton>
-          <ShimmerButton
-            variant="ghost"
-            href="#formules"
-            onClick={(e) => {
-              e.preventDefault()
-              scrollToId('formules')
-            }}
-            className="px-8 py-4 text-base"
-          >
-            <Sparkles className="h-5 w-5 text-brand" /> Voir les formules
-          </ShimmerButton>
-        </div>
-      </div>
+          {/* Rail des prix : chaque prix présélectionne sa formule dans le tarif */}
+          <div style={delay(0.5)} className="mt-10 animate-fade-up border-t border-rule pt-5">
+            <ul className="grid grid-cols-3 sm:flex sm:items-center sm:gap-6">
+              {formulas.map((f, i) => (
+                <li key={f.id} className="flex items-center gap-6">
+                  {i > 0 && <span aria-hidden className="hidden h-7 w-0.5 -skew-x-10 bg-white/20 sm:block" />}
+                  <a
+                    href="#tarif"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      onPick(f.id)
+                    }}
+                    className="group block min-h-14 py-1 pr-2"
+                  >
+                    <span className="block font-display text-sm leading-none font-bold italic uppercase text-white/60 transition-colors group-hover:text-white/85">
+                      {f.name}
+                    </span>{' '}
+                    <span className="relative mt-1.5 inline-block font-display text-[1.75rem] leading-none font-bold italic transition-colors duration-[160ms] group-hover:text-brand-light group-focus-visible:text-brand-light sm:text-[2.25rem]">
+                      {f.price}
+                      <span className="ml-[0.06em] text-[0.5em] text-brand-light">€</span>
+                      <span className="absolute inset-x-0 -bottom-1.5 [clip-path:inset(0_100%_0_0)] transition-[clip-path] duration-300 ease-out-expo group-hover:[clip-path:inset(0)] group-focus-visible:[clip-path:inset(0)]">
+                        <Stitch />
+                      </span>
+                    </span>
+                    {/* Nom accessible = texte visible + intention (critère « label in name ») */}
+                    <span className="sr-only">, voir la formule</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 flex items-center gap-2 text-sm text-white/60">
+              <MapPin aria-hidden className="h-4 w-4 shrink-0 text-brand-light" />
+              <span>
+                {fr(`Déplacement inclus jusqu’à ${travel.includedKm} km`)} <span className="whitespace-nowrap">· {contact.zone}</span>
+              </span>
+            </p>
+          </div>
 
-      <div className="relative mx-auto mt-14 w-full max-w-5xl px-2 pb-16">
-        <div {...fadeUp(0.5)} className="animate-fade-up mx-auto grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-          {stats.map((s) => (
-            <div key={s.label} className="rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3">
-              <p className="font-display text-2xl font-bold italic sm:text-3xl">
-                {s.pre && <span className="text-base text-white/60">{s.pre}</span>}
-                {s.v}
-                <span className="text-brand">{s.suf}</span>
-              </p>
-              <p className="text-xs text-white/55">{s.label}</p>
+          {/* Photo : bande pleine largeur au bord incliné sur mobile, panneau au montant incliné à 10° sur desktop */}
+          <div className="relative -mx-4 mt-10 h-[62vw] [container-type:size] sm:-mx-8 lg:absolute lg:top-24 lg:right-0 lg:bottom-0 lg:mx-0 lg:mt-0 lg:h-auto lg:w-[36vw] xl:w-[34vw]">
+            <div className="absolute inset-0 bg-steel [clip-path:polygon(0_var(--tilt-rise),100%_0,100%_100%,0_100%)] lg:[clip-path:polygon(calc(var(--slant-k)*100cqh)_0,100%_0,100%_100%,0_100%)]">
+              <img
+                src={images.hero}
+                srcSet={unsplashSrcSet(images.hero, [640, 828, 1080, 1600])}
+                sizes="(min-width: 1024px) 36vw, 100vw"
+                alt=""
+                width={1600}
+                height={1067}
+                fetchPriority="high"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+              <span aria-hidden className="absolute inset-y-0 left-0 hidden w-[3px] origin-bottom-left -skew-x-10 bg-brand-light lg:block" />
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>

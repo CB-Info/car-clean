@@ -1,4 +1,5 @@
 // Source unique du contenu du site : modifier ici les tarifs, textes et contacts.
+import { fr } from '../lib/fr'
 
 export type FormulaId = 'basic' | 'gold' | 'platinum'
 
@@ -7,57 +8,35 @@ export type Formula = {
   name: string
   price: number
   tagline: string
-  features: string[]
-  highlight?: string
 }
 
+// Accroches tirées des conseils de la FAQ V1 : aucune nouvelle promesse.
 export const formulas: Formula[] = [
-  {
-    id: 'basic',
-    name: 'Basic',
-    price: 60,
-    tagline: "L'entretien express",
-    features: [
-      'Aspiration de la moquette',
-      'Aspiration tapis',
-      'Dépoussiérage des plastiques',
-      'Nettoyage vitres intérieur & extérieur',
-    ],
-  },
-  {
-    id: 'gold',
-    name: 'Gold',
-    price: 90,
-    tagline: 'Le grand rafraîchissement',
-    features: [
-      'Aspiration de la moquette',
-      'Shampouinage tapis',
-      'Dépoussiérage & nettoyage des plastiques',
-      'Shampouinage des sièges',
-      'Nettoyage des portes et du coffre',
-      'Nettoyage vitres intérieur & extérieur',
-    ],
-  },
-  {
-    id: 'platinum',
-    name: 'Platinum',
-    price: 120,
-    tagline: 'Comme sortie de concession',
-    highlight: 'Le + complet',
-    features: [
-      'Aspiration de la moquette',
-      'Shampouinage tapis',
-      'Dépoussiérage et nettoyage des plastiques',
-      'Shampouinage des sièges et de la moquette',
-      'Nettoyage des portes et du coffre',
-      'Nettoyage vitres intérieures & extérieur',
-      'Traitement cuir / alcantara si présent',
-      'Désodorisant de finition',
-    ],
-  },
+  { id: 'basic', name: 'Basic', price: 60, tagline: fr('Entretien régulier') },
+  { id: 'gold', name: 'Gold', price: 90, tagline: fr('Le grand rafraîchissement') },
+  { id: 'platinum', name: 'Platinum', price: 120, tagline: fr('Le soin complet, cuir compris') },
 ]
 
-export const petHairOption = { label: "Poils d'animaux", price: 15 }
+export type Cell = { text?: string; check?: true } | null
+
+// Mêmes prestations que V1 — à valider avec le client, aucune prestation ajoutée
+export const serviceMatrix: { id: string; label: string; note?: string; cells: Record<FormulaId, Cell> }[] = [
+  { id: 'moquette', label: 'Moquette', cells: { basic: { text: 'Aspiration' }, gold: { text: 'Aspiration' }, platinum: { text: 'Aspiration + shampouinage' } } },
+  // « Tapis de sol » (V1 : « tapis ») — à confirmer avec le client
+  { id: 'tapis', label: 'Tapis de sol', cells: { basic: { text: 'Aspiration' }, gold: { text: 'Shampouinage' }, platinum: { text: 'Shampouinage' } } },
+  { id: 'plastiques', label: 'Plastiques', cells: { basic: { text: 'Dépoussiérage' }, gold: { text: 'Dépoussiérage + nettoyage' }, platinum: { text: 'Dépoussiérage + nettoyage' } } },
+  { id: 'sieges', label: 'Sièges', cells: { basic: null, gold: { text: 'Shampouinage' }, platinum: { text: 'Shampouinage' } } },
+  { id: 'portes', label: 'Portes et coffre', cells: { basic: null, gold: { text: 'Nettoyage' }, platinum: { text: 'Nettoyage' } } },
+  { id: 'vitres', label: 'Vitres', note: 'dedans et dehors', cells: { basic: { check: true }, gold: { check: true }, platinum: { check: true } } },
+  { id: 'cuir', label: 'Cuir / alcantara', note: 'si présent', cells: { basic: null, gold: null, platinum: { text: 'Traitement' } } },
+  { id: 'deso', label: 'Désodorisant de finition', cells: { basic: null, gold: null, platinum: { check: true } } },
+]
+
+export const petHairOption = {
+  label: fr('Poils d’animaux'),
+  price: 15,
+  detail: fr('Matériel dédié pour déloger les poils incrustés dans les tissus et la moquette.'),
+}
 
 export const travel = {
   includedKm: 10,
@@ -68,11 +47,13 @@ export const travel = {
     { upTo: 50, fee: 20 },
   ],
   perKmBeyond: 0.5,
+  maxKm: 300,
+  origin: null as string | null, // ville de départ : à fournir par le client
 }
 
 export const contact = {
   // Numéro fictif : à remplacer par celui du client.
-  phoneDisplay: '06 06 06 06 06',
+  phoneDisplay: '06 06 06 06 06',
   phoneIntl: '+33606060606',
   whatsapp: '33606060606',
   // À confirmer avec le client.
@@ -84,40 +65,82 @@ export const images = {
   beforeAfter: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1400&q=65&auto=format&fit=crop',
 }
 
-export const commitments = [
-  { icon: 'shield', title: 'Produits professionnels', text: 'Des produits adaptés à chaque surface, efficaces et sans agresser les matériaux.' },
-  { icon: 'leaf', title: 'Respect des matériaux', text: 'Tissu, cuir, alcantara, plastiques : chaque matière est traitée avec la bonne méthode.' },
-  { icon: 'sparkles', title: 'Résultat impeccable', text: 'On ne repart pas tant que votre habitacle ne brille pas. Le souci du détail, partout.' },
-  { icon: 'home', title: 'À domicile ou au travail', text: 'On vient à vous : devant chez vous ou sur le parking du bureau. Zéro trajet, zéro attente.' },
-] as const
+// Sangle 1 : les vraies prestations, pas des adjectifs.
+export const strapItems = [
+  'Aspiration',
+  'Shampouinage des sièges',
+  'Plastiques',
+  'Vitres dedans et dehors',
+  'Portes et coffre',
+  'Cuir et alcantara',
+  fr('Poils d’animaux'),
+  'Désodorisant',
+]
+
+// Le seul fait concret de l'ancienne section « Engagements » (V1).
+export const materialsNote = fr(
+  'Tissu, cuir, alcantara, plastiques : chaque matière est traitée avec la bonne méthode. Tout le matériel est fourni.',
+)
 
 export const steps = [
-  { n: '01', title: 'Vous réservez', text: 'Un appel, un SMS ou un message WhatsApp. On fixe ensemble le créneau et la formule.' },
-  { n: '02', title: 'On vient à vous', text: 'À domicile ou au travail, avec tout le matériel pro. Déplacement inclus jusqu’à 10 km.' },
-  { n: '03', title: 'On sublime', text: 'Aspiration, shampouinage, plastiques, vitres, cuir : votre intérieur retrouve son éclat.' },
-  { n: '04', title: 'Vous profitez', text: 'Vous récupérez une voiture propre, fraîche et qui sent bon. Sans avoir bougé.' },
+  {
+    title: 'Vous écrivez ou appelez',
+    text: fr('WhatsApp, SMS ou téléphone : dites-nous la formule, l’adresse et les jours qui vous arrangent.'),
+  },
+  { title: 'On fixe le rendez-vous', text: fr('On convient ensemble du jour, de l’heure et de la formule.') },
+  { title: 'On nettoie sur place', text: fr('Devant chez vous ou sur le parking du bureau, avec tout le matériel.') },
 ]
 
+const firstFee = travel.brackets[0].fee
+const lastBracket = travel.brackets[travel.brackets.length - 1]
+const perKm = travel.perKmBeyond.toLocaleString('fr-FR', { minimumFractionDigits: 2 })
+
 // Réponses à valider avec le client avant la mise en ligne.
-export const faq = [
+export const faq: { q: string; a: string; compare?: true }[] = [
   {
-    q: 'Où intervenez-vous ?',
-    a: `Directement chez vous ou sur votre lieu de travail. Le déplacement est inclus jusqu’à ${travel.includedKm} km, puis un petit forfait s’applique selon la distance (voir le simulateur).`,
+    q: fr('Où intervenez-vous ?'),
+    a: fr(
+      `Dans l’Ain, l’Isère et le Rhône, devant chez vous ou sur votre lieu de travail. Déplacement inclus jusqu’à ${travel.includedKm} km, puis de ${firstFee} à ${lastBracket.fee} € selon la distance, et ${perKm} € par km au-delà de ${lastBracket.upTo} km.`,
+    ),
   },
   {
-    q: 'Mon véhicule est très sale, c’est possible ?',
-    a: 'Bien sûr ! Pour les véhicules très sales, envoyez-nous quelques photos par SMS ou WhatsApp et on vous fait un devis sur mesure.',
+    q: fr('Vous nettoyez aussi l’extérieur ?'),
+    // à confirmer avec le client
+    a: fr('CarClean s’occupe de l’intérieur. Les vitres sont faites côté intérieur et côté extérieur.'),
   },
   {
-    q: 'J’ai un chien, les poils partent vraiment ?',
-    a: `Oui, avec l’option poils d’animaux (+${petHairOption.price} €) on utilise un matériel dédié pour déloger les poils incrustés dans les tissus et la moquette.`,
+    q: fr('Mon véhicule est très sale, c’est possible ?'),
+    a: fr('Oui : envoyez quelques photos par SMS ou WhatsApp, on vous répond avec un devis.'),
   },
   {
-    q: 'Quelle formule choisir ?',
-    a: 'Basic pour un entretien régulier, Gold pour un vrai rafraîchissement avec shampouinage des sièges, Platinum pour un résultat complet avec traitement du cuir et désodorisant.',
+    q: fr('J’ai un chien, les poils partent vraiment ?'),
+    a: fr(
+      `Oui, avec l’option poils d’animaux (+${petHairOption.price} €) on utilise un matériel dédié pour déloger les poils incrustés dans les tissus et la moquette.`,
+    ),
   },
   {
-    q: 'Comment réserver ?',
-    a: `Par téléphone au ${contact.phoneDisplay}, par SMS ou WhatsApp. Réponse rapide garantie.`,
+    q: fr('Quelle formule choisir ?'),
+    a: fr(
+      'Basic pour l’entretien régulier, Gold pour un vrai rafraîchissement avec shampouinage des sièges, Platinum pour le soin complet avec traitement du cuir et désodorisant.',
+    ),
+    compare: true,
+  },
+  {
+    q: fr('Comment réserver ?'),
+    a: fr(`Par téléphone au ${contact.phoneDisplay}, par SMS ou sur WhatsApp.`),
   },
 ]
+
+// Questions pratiques à faire trancher par le client (non affichées tant qu'elles n'ont pas de réponse vérifiée).
+export const faqToConfirm = [
+  'Durée',
+  'Présence nécessaire ?',
+  'Eau / électricité',
+  'Paiement',
+  'Taille du véhicule (SUV, utilitaire)',
+  'Jours et horaires',
+  'Annulation',
+]
+
+// Mentions légales : champs à fournir par le client, aucune valeur inventée.
+export const legal = '[raison sociale] · SIRET [à fournir] · [adresse à fournir] · Hébergeur [à fournir]'
