@@ -1,0 +1,162 @@
+@import "tailwindcss" source("./");
+
+/* Police des titres auto-hébergée (préchargée dans index.html) */
+@font-face {
+  font-family: "Chakra Petch";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/chakra-petch-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Chakra Petch";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/chakra-petch-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Chakra Petch";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/chakra-petch-latin-700-italic.woff2") format("woff2");
+}
+
+@theme {
+  --color-brand: #e10600;
+  --color-brand-light: #ff2a1f;
+  --color-brand-dark: #8f0400;
+  --color-ink: #050505;
+  --color-carbon: #0e0e10;
+  --color-steel: #18181c;
+  --color-line: #2a2a30;
+  --color-mist: #a1a1aa;
+
+  --font-display: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --animate-marquee: marquee var(--duration, 30s) linear infinite;
+  --animate-shine: shine 0.9s ease-out;
+  --animate-beam: beam var(--beam-duration, 8s) linear infinite;
+  --animate-pulse-ring: pulse-ring 2s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-word-rise: word-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap, 2rem))); }
+  }
+  @keyframes shine {
+    from { transform: translateX(-120%) skewX(-20deg); }
+    to { transform: translateX(320%) skewX(-20deg); }
+  }
+  @keyframes beam {
+    to { offset-distance: 100%; }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+  }
+  @keyframes word-rise {
+    from { transform: translateY(100%); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.45); opacity: 0; }
+  }
+}
+
+html {
+  background: var(--color-ink);
+  color: #fff;
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+/* Filet de sécurité : `clip` ne crée pas de conteneur de scroll (contrairement à `hidden`),
+   il ne casse donc pas `position: sticky`. Les débordements eux-mêmes sont corrigés à la source. */
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Anneau de BorderBeam : seul le padding reste visible */
+.beam-ring {
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+::selection { background: var(--color-brand); color: #fff; }
+
+/* Tailwind v4 remet les boutons en cursor: default : on rétablit la main sur tout ce qui est cliquable */
+@layer base {
+  a[href],
+  button:not(:disabled),
+  [role="button"],
+  [role="switch"],
+  summary,
+  label[for],
+  select,
+  input[type="range"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    cursor: pointer;
+  }
+  button:disabled { cursor: not-allowed; }
+}
+
+.text-gradient-red {
+  background: linear-gradient(100deg, #ff4a3d 0%, #e10600 45%, #ff2a1f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+input[type="range"].range-red {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-brand) var(--fill, 0%), var(--color-line) var(--fill, 0%));
+  outline: none;
+}
+input[type="range"].range-red::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #fff;
+  border: 5px solid var(--color-brand);
+  box-shadow: 0 0 0 6px rgb(225 6 0 / 0.2);
+  cursor: grab;
+}
+input[type="range"].range-red::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #fff;
+  border: 5px solid var(--color-brand);
+  cursor: grab;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
