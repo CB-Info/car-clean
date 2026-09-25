@@ -71,20 +71,17 @@ export const travel = {
 }
 
 export const contact = {
-  phoneDisplay: '06 34 53 10 41',
-  phoneIntl: '+33634531041',
-  whatsapp: '33634531041',
-  tiktok: { handle: 'car_clean01.38.69', url: 'https://www.tiktok.com/@car_clean01.38.69' },
-  instagram: { handle: '@carclean01.38.69', url: 'https://www.instagram.com/carclean01.38.69' },
-  // Déduit des identifiants réseaux (01 · 38 · 69) : à confirmer avec le client.
+  // Numéro fictif : à remplacer par celui du client.
+  phoneDisplay: '06 06 06 06 06',
+  phoneIntl: '+33606060606',
+  whatsapp: '33606060606',
+  // À confirmer avec le client.
   zone: 'Ain · Isère · Rhône',
 }
 
 export const images = {
   hero: 'https://images.unsplash.com/photo-1485291571150-772bcfc10da5?w=1600&q=65&auto=format&fit=crop',
   beforeAfter: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1400&q=65&auto=format&fit=crop',
-  foam: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=900&q=65&auto=format&fit=crop',
-  spray: 'https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=900&q=65&auto=format&fit=crop',
 }
 
 export const commitments = [
@@ -109,7 +106,7 @@ export const faq = [
   },
   {
     q: 'Mon véhicule est très sale, c’est possible ?',
-    a: 'Bien sûr ! Pour les véhicules très sales, envoyez-nous quelques photos par SMS, WhatsApp ou Instagram et on vous fait un devis sur mesure.',
+    a: 'Bien sûr ! Pour les véhicules très sales, envoyez-nous quelques photos par SMS ou WhatsApp et on vous fait un devis sur mesure.',
   },
   {
     q: 'J’ai un chien, les poils partent vraiment ?',
@@ -121,6 +118,6 @@ export const faq = [
   },
   {
     q: 'Comment réserver ?',
-    a: `Par téléphone au ${contact.phoneDisplay}, par SMS, WhatsApp ou en message privé sur Instagram / TikTok. Réponse rapide garantie.`,
+    a: `Par téléphone au ${contact.phoneDisplay}, par SMS ou WhatsApp. Réponse rapide garantie.`,
   },
 ]

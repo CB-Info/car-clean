@@ -4,9 +4,12 @@ import { Marquee } from '../magicui/marquee'
 const items = ['Produits professionnels', 'Respect des matériaux', 'Résultat impeccable', 'À domicile ou au travail', 'Shampouinage sièges', 'Traitement cuir & alcantara']
 
 // Un seul bandeau, animé en CSS (transform uniquement).
+// Incliné de 2°, le bandeau (105 % de large) monte/descend de ~1,8 % de la largeur d'écran à ses extrémités :
+// le padding vertical suit donc la largeur (vw), et seul l'axe horizontal est rogné (overflow-x-clip)
+// pour ne jamais couper le haut ou le bas du bandeau.
 export function BenefitsMarquee() {
   return (
-    <div className="relative z-10 overflow-hidden py-4">
+    <div className="relative z-10 overflow-x-clip py-[max(1rem,2.5vw)]">
       <div className="-rotate-2 scale-105 bg-brand py-4">
         <Marquee duration="40s" repeat={2} className="[--gap:2rem]">
           {items.map((t) => (

@@ -10,7 +10,6 @@ import { Formulas } from './components/sections/Formulas'
 import { Simulator } from './components/sections/Simulator'
 import { Process } from './components/sections/Process'
 import { Commitments } from './components/sections/Commitments'
-import { Socials } from './components/sections/Socials'
 import { Faq } from './components/sections/Faq'
 import { FinalCta } from './components/sections/FinalCta'
 import { FloatingCall } from './components/sections/FloatingCall'
@@ -44,7 +43,6 @@ export default function App() {
         <Simulator formula={formula} setFormula={setFormula} petHair={petHair} setPetHair={setPetHair} km={km} setKm={setKm} />
         <Process />
         <Commitments />
-        <Socials />
         <Faq />
         <FinalCta />
       </main>

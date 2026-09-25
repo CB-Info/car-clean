@@ -16,11 +16,11 @@ export function Process() {
             const Icon = icons[i]
             return (
               <Reveal key={s.n} delay={i * 0.06} className="h-full">
-                <article className="group relative h-full overflow-hidden rounded-3xl border border-white/10 bg-ink/80 p-7">
+                <article className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-ink/80 p-7">
                   <span aria-hidden className="pointer-events-none absolute -right-3 -top-6 font-display text-[7rem] leading-none font-bold italic text-transparent [-webkit-text-stroke:1.5px_rgba(225,6,0,0.35)]">
                     {s.n}
                   </span>
-                  <span className="relative grid h-12 w-12 place-items-center rounded-2xl bg-brand transition-transform duration-300 group-hover:-rotate-6">
+                  <span className="relative grid h-12 w-12 place-items-center rounded-2xl bg-brand">
                     <Icon className="h-6 w-6" />
                   </span>
                   <h3 className="relative mt-6 font-display text-2xl font-bold italic uppercase">{s.title}</h3>

@@ -1,7 +1,7 @@
 import { MessageSquare, Phone } from 'lucide-react'
 import { ShimmerButton } from '../magicui/shimmer-button'
 import { Reveal } from '../ui/reveal'
-import { InstagramIcon, TikTokIcon, WhatsAppIcon } from '../ui/brand-icons'
+import { WhatsAppIcon } from '../ui/brand-icons'
 import { Logo } from '../ui/logo'
 import { contact } from '../../data/content'
 import { smsLink, telLink, whatsappLink } from '../../lib/links'
@@ -44,17 +44,9 @@ export function FinalCta() {
             <Logo />
             <p className="mt-1 text-xs uppercase tracking-widest text-mist">Service de nettoyage automobile à domicile</p>
           </div>
-          <div className="flex items-center gap-3">
-            {[
-              { href: contact.tiktok.url, Icon: TikTokIcon, label: 'TikTok' },
-              { href: contact.instagram.url, Icon: InstagramIcon, label: 'Instagram' },
-              { href: whatsappLink(), Icon: WhatsAppIcon, label: 'WhatsApp' },
-            ].map(({ href, Icon, label }) => (
-              <a key={label} href={href} target="_blank" rel="noreferrer" aria-label={label} className="grid h-11 w-11 place-items-center rounded-full border border-white/10 transition-colors hover:border-brand hover:bg-brand">
-                <Icon className="h-5 w-5" />
-              </a>
-            ))}
-          </div>
+          <a href={whatsappLink()} target="_blank" rel="noreferrer" aria-label="WhatsApp" className="grid h-11 w-11 place-items-center rounded-full border border-white/10 transition-colors hover:border-brand hover:bg-brand">
+            <WhatsAppIcon className="h-5 w-5" />
+          </a>
         </div>
         <p className="mx-auto mt-8 max-w-6xl text-center text-xs text-white/55 sm:text-left">
           © {new Date().getFullYear()} CarClean · Auto-entrepreneur · Mentions légales
