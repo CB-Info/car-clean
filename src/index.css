@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Les variantes de design (/v2/, /v3/) ont leur propre feuille : on ne scanne pas leurs classes ici. */
+@source not "./v2";
+@source not "./v3";
 
 /* Police des titres auto-hébergée (préchargée dans index.html) */
 @font-face {

@@ -1,0 +1,233 @@
+@import "tailwindcss" source("./");
+
+/* Police des titres auto-hébergée (préchargée dans index.html).
+   V2 n'utilise que l'italique 700 : tout le texte display est en Chakra Petch 700 italique. */
+@font-face {
+  font-family: "Chakra Petch";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/chakra-petch-latin-700-italic.woff2") format("woff2");
+}
+
+@theme {
+  --color-brand: #e10600;
+  --color-brand-light: #ff2a1f;
+  --color-brand-dark: #8f0400;
+  --color-ink: #050505;
+  --color-carbon: #0e0e10;
+  --color-steel: #18181c;
+  --color-graphite: #222228; /* second ton des vibreurs */
+  --color-line: #2a2a30;
+  --color-mist: #a1a1aa;
+
+  --font-display: "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-drop: 0 16px 32px -16px rgb(0 0 0 / 0.85); /* poignée du comparateur uniquement */
+
+  --animate-marquee: marquee var(--duration, 30s) linear infinite;
+  --animate-fade-up: fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-word-rise: word-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-digit-in-up: digit-in-up 240ms var(--ease-out-expo) both;
+  --animate-digit-out-up: digit-out-up 240ms var(--ease-out-expo) both;
+  --animate-digit-in-down: digit-in-down 240ms var(--ease-out-expo) both;
+  --animate-digit-out-down: digit-out-down 240ms var(--ease-out-expo) both;
+  --animate-row-wipe: row-wipe 360ms var(--ease-out-expo) both;
+  --animate-value-in: value-in 180ms var(--ease-out-expo) both;
+  --animate-hold-red: hold-red 600ms linear both;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-100% - var(--gap, 2rem))); }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+  }
+  @keyframes word-rise {
+    from { transform: translateY(100%); }
+  }
+  @keyframes digit-in-up {
+    from { transform: translateY(100%); }
+  }
+  @keyframes digit-out-up {
+    to { transform: translateY(-100%); }
+  }
+  @keyframes digit-in-down {
+    from { transform: translateY(-100%); }
+  }
+  @keyframes digit-out-down {
+    to { transform: translateY(100%); }
+  }
+  @keyframes row-wipe {
+    from { transform: translateX(-110%) skewX(-10deg); opacity: 1; }
+    75% { opacity: 1; }
+    to { transform: translateX(260%) skewX(-10deg); opacity: 0; }
+  }
+  @keyframes value-in {
+    from { transform: translateY(100%); }
+  }
+  /* Repli « mouvement réduit » : la ligne modifiée passe en rouge un instant, sans bouger. */
+  @keyframes hold-red {
+    0%, 70% { color: var(--color-brand-light); }
+  }
+}
+
+:root {
+  --slant: -10deg; /* Chakra Petch 700 italique : post.italicAngle = -10.0 (mesuré) */
+  --slant-k: 0.1763; /* tan 10° */
+  --tape-rise: 3.5vw; /* tan 2° × 100vw : les grands plans suivent l'angle du bandeau */
+  --cut: 14px; /* pan coupé des aplats non interactifs */
+  --digit: 0.66em; /* chiffre le plus large de Chakra (« 0 » = 652/1000) ; la police n'a pas de tnum */
+  --board-cols: minmax(10rem, 1.1fr) repeat(3, minmax(0, 1fr));
+}
+
+/* Pan coupé en haut à droite, repris des angles de Chakra Petch.
+   Jamais sur un élément focalisable : le clip-path mangerait son contour de focus. */
+@utility cut-tr {
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+}
+
+/* Lien dans le texte courant */
+@utility text-link {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--color-brand-light);
+  transition: text-decoration-thickness 160ms;
+  &:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+html {
+  background: var(--color-ink);
+  color: #fff;
+  color-scheme: dark;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  scroll-padding-top: 80px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) var(--color-ink);
+  hyphens: manual;
+}
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+/* Filet de sécurité : `clip` ne crée pas de conteneur de scroll (contrairement à `hidden`),
+   il ne casse donc pas `position: sticky`. Les débordements eux-mêmes sont corrigés à la source. */
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+::selection { background: var(--color-brand); color: #fff; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--color-ink); }
+::-webkit-scrollbar-thumb { background: var(--color-line); border: 2px solid var(--color-ink); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-brand-dark); }
+
+@layer base {
+  /* Tailwind v4 remet les boutons en cursor: default : on rétablit la main sur tout ce qui est cliquable */
+  a[href],
+  button:not(:disabled),
+  [role="button"],
+  [role="switch"],
+  [role="radio"],
+  summary,
+  label[for],
+  label:has(input),
+  select,
+  input[type="checkbox"],
+  input[type="radio"] {
+    cursor: pointer;
+  }
+  button:disabled { cursor: not-allowed; }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-light);
+    outline-offset: 3px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+  /* Sections qui reçoivent le focus après un lien interne (scrollToId) : pas d'anneau sur un bloc entier */
+  [data-focus-target]:focus { outline: none; }
+
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  input {
+    caret-color: var(--color-brand-light);
+    accent-color: var(--color-brand);
+  }
+  input::placeholder { color: rgb(255 255 255 / 0.6); }
+  input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { appearance: none; margin: 0; }
+
+  summary { list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+}
+
+/* Bandeau rouge : sélection et contours de focus en blanc/encre, soulignés en blanc */
+.on-red ::selection { background: var(--color-ink); color: #fff; }
+.on-red :focus-visible { outline-color: #fff; }
+.on-red .text-link { text-decoration-color: currentColor; }
+
+/* Case « poils d'animaux » : coche lucide dessinée en fond, penchée avec la case */
+.pet-check:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  background-size: 15px 15px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Déroulé : le marquage de chaque emplacement se peint pendant le défilement (animation liée au scroll,
+   sans JS). Retour gauche, puis trait (rouge pendant qu'il se trace, puis blanc), puis retour droit.
+   Seul le marquage bouge : numéros, titres et textes restent visibles d'office. */
+@keyframes slot-draw {
+  from { transform: scaleX(0); background-color: var(--color-brand-light); }
+  75% { background-color: var(--color-brand-light); }
+}
+@keyframes slot-tick {
+  from { transform: scaleY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .slot { view-timeline: --slot block; }
+    .slot::before,
+    .slot::after,
+    .slot .slot-tick {
+      animation: slot-draw linear both;
+      animation-timeline: --slot;
+    }
+    .slot::before { transform-origin: left; animation-range: entry 10% entry 85%; }
+    .slot .slot-tick { transform-origin: top; animation-name: slot-tick; animation-range: entry 0% entry 20%; }
+    .slot::after { transform-origin: top; animation-name: slot-tick; animation-range: entry 85% entry 100%; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .animate-marquee { animation: none !important; }
+  /* Changement de couleur, pas de mouvement : on le garde pour relier la cause à l'effet */
+  .animate-hold-red { animation-duration: 600ms !important; }
+}
+
+/* Contraste élevé : les aplats portent l'état, on le rend avec les couleurs système */
+@media (forced-colors: active) {
+  .slant-control { border: 1px solid ButtonText; }
+  .slant-control[aria-checked="true"] { background: Highlight; color: HighlightText; }
+  .pet-check { forced-color-adjust: none; border-color: ButtonText; }
+  .pet-check:checked { background-color: Highlight; }
+}
