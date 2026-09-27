@@ -97,34 +97,44 @@ export function FinalCta({ state }: { state: QuoteState }) {
 
       <footer className="border-t border-rule bg-ink py-10">
         <div className="mx-auto max-w-[75rem] px-4 sm:px-8">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-4">
-            <Logo />
-            <p className="text-sm text-mist">Nettoyage intérieur de voitures, à domicile ou au travail.</p>
+          <div className="flex flex-col gap-6 sm:flex-row sm:justify-between">
+            <div>
+              <Logo />
+              <p className="mt-2 text-sm text-mist">Nettoyage intérieur de voitures, à domicile ou au travail.</p>
+            </div>
+            <div className="text-sm sm:text-right">
+              {/* Cibles tactiles d'au moins 44 px de haut, même pour ces liens texte */}
+              <p className="flex flex-wrap items-center gap-x-3 text-white/80 sm:justify-end">
+                <a href={telLink} className="link inline-flex min-h-11 items-center whitespace-nowrap tabular-nums">
+                  Tél. {contact.phoneDisplay}
+                </a>
+                <span aria-hidden className="text-white/30">
+                  ·
+                </span>
+                <a href={smsLink(genericMessage)} className="link inline-flex min-h-11 min-w-11 items-center justify-center">
+                  SMS
+                </a>
+                <span aria-hidden className="text-white/30">
+                  ·
+                </span>
+                <a href={whatsappLink(genericMessage)} target="_blank" rel="noreferrer" className="link inline-flex min-h-11 items-center">
+                  WhatsApp
+                </a>
+              </p>
+              <p className="text-mist">{contact.zone}</p>
+            </div>
           </div>
-          <p className="mt-5 text-sm text-white/80">
-            Tél.{' '}
-            <a href={telLink} className="link tabular-nums">
-              {contact.phoneDisplay}
-            </a>{' '}
-            ·{' '}
-            <a href={smsLink(genericMessage)} className="link">
-              SMS
-            </a>{' '}
-            ·{' '}
-            <a href={whatsappLink(genericMessage)} target="_blank" rel="noreferrer" className="link">
-              WhatsApp
-            </a>{' '}
-            — <span className="whitespace-nowrap">{contact.zone}</span>
-          </p>
-          <p className="mt-5 text-[13px] text-white/55">© {new Date().getFullYear()} CarClean · Auto-entrepreneur</p>
-          {/* Placeholders à fournir par le client : aucune valeur inventée */}
-          <details id="mentions" className="group/legal text-[13px] text-white/55">
-            <summary className="inline-flex min-h-11 items-center gap-1.5">
-              <span className="link">Mentions légales</span>
-              <ChevronDown aria-hidden className="h-3.5 w-3.5 transition-transform duration-200 group-open/legal:rotate-180" />
-            </summary>
-            <p className="max-w-[62ch] pb-2 leading-[1.6]">{legal}</p>
-          </details>
+          <div className="mt-6 flex flex-wrap items-baseline gap-x-2 text-[13px] text-white/55">
+            <span>© {new Date().getFullYear()} CarClean · Auto-entrepreneur ·</span>
+            {/* Placeholders à fournir par le client : aucune valeur inventée */}
+            <details id="mentions" className="group/legal">
+              <summary className="inline-flex min-h-11 items-center gap-1.5">
+                <span className="link">Mentions légales</span>
+                <ChevronDown aria-hidden className="h-3.5 w-3.5 transition-transform duration-200 group-open/legal:rotate-180" />
+              </summary>
+              <p className="mt-1 mb-2 max-w-[62ch] leading-[1.6]">{legal}</p>
+            </details>
+          </div>
         </div>
       </footer>
     </>

@@ -78,8 +78,8 @@ export function Summary({ state }: { state: QuoteState }) {
       <div id="demande-total" className="mt-6">
         <p className="font-display text-xl leading-none font-bold italic uppercase text-mist">Total</p>
         <div className="mt-2 flex items-baseline justify-end">
-          {/* Le € est le dernier tambour, rouge, dans la même fenêtre que les chiffres */}
-          <span className="inline-flex items-baseline cut bg-ink pr-[0.18em] pl-[0.04em] font-display text-[clamp(3.25rem,5vw,4.75rem)] leading-none font-bold italic [--c:var(--cut-sm)]">
+          {/* Le € suit le dernier tambour, en rouge */}
+          <span className="inline-flex items-baseline font-display text-[clamp(3.25rem,5vw,4.75rem)] leading-none font-bold italic">
             <Odometer value={q.total} />
             <span className="-ml-[0.08em] text-[0.45em] text-brand-light">€</span>
           </span>
