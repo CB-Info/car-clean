@@ -186,14 +186,6 @@ body {
   input { accent-color: var(--color-brand); }
 }
 
-/* FAQ : ouverture en hauteur (amélioration progressive) */
-details.faq-item::details-content {
-  block-size: 0;
-  overflow: clip;
-  transition: block-size 240ms var(--ease-out-expo), content-visibility 240ms allow-discrete;
-}
-details.faq-item[open]::details-content { block-size: auto; }
-
 /* Jauge : couche de balayage de la mise du contact */
 .gauge .seg::after {
   content: "";
